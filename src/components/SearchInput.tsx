@@ -1,57 +1,32 @@
-import React, { useState } from 'react';
-import { searchArtists, getSongsByArtist } from '../lib/api.ts';
+import React from 'react';
 
-const SearchInput: React.FC = () => {
-    const [artistName, setArtistName] = useState('');
-    const [artists, setArtists] = useState([]);
-    const [songs, setSongs] = useState([]);
+interface SearchInputProps {
+    artistName: string;
+    setArtistName: (name: string) => void;
+    handleSearch: () => void;
+    artists: any[];
+    handleArtistSelect: (artistId: string) => void;
+    songs: any[];
+}
 
-    const handleSearch = async () => {
-        try {
-            const result = await searchArtists(artistName);
-            setArtists(result);
-        } catch (error) {
-            console.error('Error searching for artists:', error);
-        }
-    };
-
-    const handleArtistSelect = async (artistId: string) => {
-        try {
-            const result = await getSongsByArtist(artistId);
-            setSongs(result);
-        } catch (error) {
-            console.error('Error retrieving songs by artist:', error);
-        }
-    };
-
+const SearchInput: React.FC<SearchInputProps> = ({
+                                                     artistName,
+                                                     setArtistName,
+                                                     handleSearch,
+                                                     artists,
+                                                     handleArtistSelect,
+                                                     songs
+                                                 }) => {
     return (
-        <div>
+        <div className="mb-4">
             <input
                 type="text"
                 value={artistName}
                 onChange={(e) => setArtistName(e.target.value)}
                 placeholder="Enter artist name"
+                className="border p-2 rounded w-full mb-2"
             />
-            <button onClick={handleSearch}>Search</button>
-            {artists.length > 0 && (
-                <ul>
-                    {artists.map((artist: any) => (
-                        <li key={artist.id} onClick={() => handleArtistSelect(artist.id)}>
-                            {artist.name}
-                        </li>
-                    ))}
-                </ul>
-            )}
-            {songs.length > 0 && (
-                <div>
-                    <h3>Songs</h3>
-                    <ul>
-                        {songs.map((song: any) => (
-                            <li key={song.id}>{song.title}</li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+            <button onClick={handleSearch} className="bg-blue-500 text-white p-2 rounded">Search</button>
         </div>
     );
 };
