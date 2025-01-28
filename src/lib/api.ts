@@ -24,21 +24,29 @@ export const getSongsByArtist = async (artistId: string) => {
     }
 };
 
-export const saveSelectedSongs = async (songs: any) => {
+export const saveSelectedSongs = async (songId: any) => {
     try {
-        const response = await fetch('/api/Deezer/save-songs', {
+        const response = await fetch(`http://localhost:5128/api/Deezer/save-songs/${songId}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(songs),
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return await response.json();
     } catch (error) {
         console.error('Error saving selected songs:', error);
         throw error;
     }
 };
+
+export const getPlaylists = async () => {
+    try {
+        const response = await fetch('http://localhost:5128/api/Deezer/playlist/songs');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error retrieving playlists:', error);
+        throw error;
+    }
+}
